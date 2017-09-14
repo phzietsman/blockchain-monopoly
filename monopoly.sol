@@ -66,8 +66,7 @@ contract MyToken {
     /// @notice Allows `_spender` to spend no more than `_value` tokens in your behalf
     /// @param _spender The address authorized to spend
     /// @param _value the max amount they can spend
-    function approve(address _spender, uint256 _value)
-        returns (bool success) {
+    function approve(address _spender, uint256 _value) returns (bool success) {
         allowance[msg.sender][_spender] = _value;
         return true;
     }
@@ -76,8 +75,7 @@ contract MyToken {
     /// @param _spender The address authorized to spend
     /// @param _value the max amount they can spend
     /// @param _extraData some extra information to send to the approved contract
-    function approveAndCall(address _spender, uint256 _value, bytes _extraData)
-        returns (bool success) {
+    function approveAndCall(address _spender, uint256 _value, bytes _extraData) returns (bool success) {
         tokenRecipient spender = tokenRecipient(_spender);
         if (approve(_spender, _value)) {
             spender.receiveApproval(msg.sender, _value, this, _extraData);
