@@ -150,7 +150,7 @@ In the JavaScript console, start your miner.
 
 ```sh
 > miner.setEtherbase(your_address_from_mist) 
-> miner.start()
+> miner.start(1)
 ```
 
 You will notice after you start your miner it will start to build a [DAG](https://github.com/ethereum/wiki/wiki/Ethash-DAG). This firts needs to finish before you will actually start mining Ether. To check your Ether balance using the JavaScript console:
@@ -231,7 +231,11 @@ To check the ports used by geth and also find your enode URI run:
 * Claiming the money in the **Fines Pool** needs all the player's consensus
 * Players pay 'Rent' to each other when landing on an owned property   
 
-To simplify the game, the token onwner controls the bank.  This can be a player of an external party. a better solution would be to remove the bank owner with claims against the bank which gets approved by the other players.
+To simplify the game, the token owner controls the bank.  This can be a player of an external party. a better solution would be to remove the bank owner with claims against the bank which gets approved by the other players.
+
+### Getting the interface to the generated token ###
+https://ethereum.github.io/browser-solidity/#version=soljson-v0.4.16+commit.d7661dd9.js
+
 
 ### Functions Required ###
 
