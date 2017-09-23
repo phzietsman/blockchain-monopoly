@@ -67,7 +67,7 @@ contract MonopolyBank is Owned, BankManager {
     mapping (address => uint256) public balanceOf;
 
     /* This generates a public event on the blockchain that will notify clients */
-    event Transfer(address indexed from, address indexed to, uint256 value);
+    event Transfer(string from, address indexed to, uint256 value);
 
     /* Initializes contract with initial supply tokens to the creator of the contract */
     function MonopolyBank(
@@ -88,12 +88,12 @@ contract MonopolyBank is Owned, BankManager {
     }
 
     /* Internal transfer, only can be called by this contract */
-    function _transfer(address _from, address _to, uint _value) internal {
+    function _transfer(address _from, string _fromCharm, address _to, uint _value) internal {
         require (balanceOf[_from] > _value);                // Check if the sender has enough
         require (balanceOf[_to] + _value > balanceOf[_to]); // Check for overflows
         balanceOf[_from] -= _value;                         // Subtract from the sender
         balanceOf[_to] += _value;                            // Add the same to the recipient
-        Transfer(_from, _to, _value);
+        Transfer(_fromCharm, _to, _value);
     }
 
     function _assignCharm(string charmName, address _to) internal onlyOwner {

@@ -5,11 +5,14 @@
 Don't use the .deb if your are on Ubuntu, I had some issue starting a private node with it. Probably a PEBCAC issue :)
 
 * Nodejs + npm
-* Geth + Tools (https://geth.ethereum.org/downloads/)
-* Wallet (https://github.com/ethereum/mist/releases)
+* Geth + Tools [Link](https://geth.ethereum.org/downloads/)
+* Wallet [Link](https://github.com/ethereum/mist/releases)
 
 Nice to haves:
 * VSCode + Solidity plugin
+
+Tools
+* Contract interface generator [Link](http://chriseth.github.io/browser-solidity/#version=soljson-latest.js)
 
 -----
 ## Starting a development Ethereum blockchain ##

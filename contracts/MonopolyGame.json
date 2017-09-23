@@ -1,0 +1,39 @@
+[
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "tokenName",
+				"type": "string"
+			},
+			{
+				"name": "tokenSymbol",
+				"type": "string"
+			}
+		],
+		"name": "newGame",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "games",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
