@@ -15,6 +15,7 @@ contract Owned {
     function transferOwnership(address newOwner) onlyOwner {
         owner = newOwner;
     }
+
 }
 
 contract Bank is Owned {
@@ -33,6 +34,8 @@ contract Bank is Owned {
     function newBankManager(address newManager) onlyOwner {
         bankManager = newManager;
     }
+
+    
 }
 
 contract MonopolyGame {
@@ -81,7 +84,7 @@ contract MonopolyBank is Owned, Bank {
       "Wheelbarrow"
 		];
 
-		mapping(string => bool) _charms;
+		mapping (string => bool) _charms;
     mapping (string => address) charmToOwner;
 		mapping (address => string) public ownerToCharm;
 
@@ -103,6 +106,9 @@ contract MonopolyBank is Owned, Bank {
         symbol = tokenSymbol;                               // Set the symbol for display purposes
         decimals = decimalUnits;                            // Amount of decimals for display purposes
 
+        // msg.sender in this context is not the same as in the MonopolyGame context,
+        // since this contract gets executed from the MonopolyGame address, the sender is 
+        // MonopolyGame.
 				transferOwnership(ownerNew);
 
 

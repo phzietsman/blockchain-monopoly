@@ -33,13 +33,13 @@ Look for the following line after the node has started:
 
 `IPC endpoint opened: your_ipc_endpoint`
 
-Start an interactive client and wallet, hooked up to your local running node:
+Start an interactive wallet and client, hooked up to your local running node:
 ```sh
-$ ./geth attach ipc:your_ipc_endpoint
 $ ./wallet --rpc your_ipc_endpoint
+$ ./geth attach ipc:your_ipc_endpoint
 ```
 
-Using the interactive client, create an account and start your miner:
+Using the interactive client (Javascript console), create an account and start your miner:
 ```sh
 > personal.newAccount()
 > miner.setEtherbase(personal.listAccounts[0]) 
@@ -59,9 +59,8 @@ Other less official resources on creating a private network
 
 ### Genesis block ###
 
-First you need a genesis block. This will be the first block in your blockchain and other networks / blockchains with a different genesis block will not sync with this private one.
-
-The 
+First you need a genesis block. This will be the first block in your blockchain and other networks / blockchains with a different genesis block will not sync with this private one. Especially take note of the `chainId`, we will be using it later in the startup of our nodes.
+ 
 
 ```json
 {
@@ -84,10 +83,15 @@ The
 }
 ```
 
-Create a default account, this account will be seeded with ether in the genesis block. On a private network this is not important since mining is easy and your earn ether pretty quickly.
-```sh
-$./geth account new
-```
+> **Ignore for now**
+>
+> <span style="color:red">I have not dug into this, but it feels like the chicken and  the egg problem.</span>
+> Create a default account, this account will be seeded with ether in the genesis 
+> block. On a private network this is not important since mining is easy and your earn  ether pretty quickly.
+> 
+> ```sh
+> $./geth account new
+> ```
 
 ### Starting your nodes ###
 **Each node in the network should use the same genesis block / json file to setup their node**
@@ -98,13 +102,16 @@ To create a database that uses this genesis block, run the following command. Th
 $ ./geth --datadir blockchaindata init "../genesis.json"
 ```
 
-Future runs of geth on this data directory will use the genesis block you have defined. **Note** the networkid matches the chainId in the genesis block. The main ethereum network uses chainId=1. The --identity flag simply gives your node a friendly name, this is not required.
+Future runs of geth on this data directory will use the genesis block you have defined. 
+
+>**Note** the networkid matches the chainId in the genesis block. The main ethereum network uses chainId=1. The --identity flag simply gives your node a friendly name, this is not required.
+
 ```sh
 $ ./geth --datadir blockchaindata --identity "MyNodeName" --networkid 123
 ```
 
 ### Network Connectivity ###
-For nodes to discover each other, you need a bootnode (one of the tools in the Ethereum toolbox). This node needs to be reachable by all the nodes you want to connect together.
+For nodes to discover each other, you need a bootnode (one of the tools in the Ethereum toolbox). This node needs to be reachable by all the nodes you want to connect together. It is possible to run network without a peer node, if you know the `enode` address of someone in the network.
 
 ```sh
 $ bootnode --genkey=boot.key
@@ -134,15 +141,17 @@ Or using the JavaScript console, using `admin.addPeer()`:
 
 ### Mining on a PRIVATE network ###
 
-In a private network setting however, a single CPU miner instance is more than enough for practical purposes as it can produce a stable stream of blocks at the correct intervals without needing heavy resources (consider running on a single thread, no need for multiple ones either). To start a Geth instance for mining, run it with all your usual flags, extended by:
+In a private network, a single CPU miner instance is more than enough for practical purposes as it can produce a stable stream of blocks at the correct intervals without needing heavy resources (consider running on a single thread, no need for multiple ones either). To start a Geth instance for mining, run it with all your usual flags, extended by:
+
+*This is buggy >>*
 
 ```sh
 $ ./geth <usual-flags> --mine --minerthreads=1 --etherbase=your_eth_account
 ```
 Which will start mining bocks and transactions on a single CPU thread, crediting all proceedings to the account specified by --etherbase. You can further tune the mining by changing the default gas limit blocks converge to (--targetgaslimit) and the price transactions are accepted at (--gasprice).
 
-**NOTE** 
-I had some issue to get the abouve to work, but the JavaScript console with Mist worked just fine.
+>**Note** 
+>I had some issue to get my miner to run via the commandline args, but the JavaScript console with Mist worked just fine.
 
 Open Mist and create a new account:
 ```sh
@@ -156,13 +165,13 @@ In the JavaScript console, start your miner.
 > miner.start(1)
 ```
 
-You will notice after you start your miner it will start to build a [DAG](https://github.com/ethereum/wiki/wiki/Ethash-DAG). This firts needs to finish before you will actually start mining Ether. To check your Ether balance using the JavaScript console:
+You will notice after you start your miner it will start to build a [DAG](https://github.com/ethereum/wiki/wiki/Ethash-DAG). This first needs to finish before you will actually start mining Ether. To check your Ether balance using the JavaScript console:
 
 ```sh
 > eth.getBalance(your_address_from_mist)
 ```
 
-### Network Connectivity ###
+### Network Connectivity, again ###
 
 To check how many peers the client is connected to in the interactive console, the net module has two attributes give you info about the number of peers and whether you are a listening node.
 
@@ -218,12 +227,14 @@ To check the ports used by geth and also find your enode URI run:
 }
 ```
 
+The `[::]` is a short hand for localhost / 127.0.0.1.
+
 
 -----
 
-## Blockchain Monopoly ##
+# Blockchain Monopoly #
 
-### Monopoly Guidelines ###
+## Monopoly Guidelines ##
 * 8 players (Battleship, Boot, Scottie, Iron, Racecar, Hat, Thimble, Wheelbarrow)
 * Total money in circulation: **$15140**
 * Each player receives **$1500** before round one
@@ -231,32 +242,101 @@ To check the ports used by geth and also find your enode URI run:
 * Bank owns all the money at the start of the game
 * The bank pays each player **$200** everytime they pass **Start**
 * Fines gets paid in a **Fines Pool**  and is not owned by anybody
-* Claiming the money in the **Fines Pool** needs all the player's consensus
+* Claiming the money in the **Fines Pool** needs another player / all the player's consensus
 * Players pay 'Rent' to each other when landing on an owned property   
 
-To simplify the game, the token owner controls the bank.  This can be a player of an external party. a better solution would be to remove the bank owner with claims against the bank which gets approved by the other players.
-
-### Getting the interface to the generated token ###
-https://ethereum.github.io/browser-solidity/#version=soljson-v0.4.16+commit.d7661dd9.js
+To simplify the game, the token owner controls the bank.  This can be a player or an external party. A more betterer solution would be to remove the bank owner with claims against the bank which gets approved by the other players.
 
 
-### Functions Required ###
+## Application "design" ##
+### The Contracts ###
+The application will be split up into multiple contracts, it is neccesary for this use case, but it is fun.
 
+```javascript
+contract Owned {
+  /*
+    This contract will be used to assign an owner to other cotracts
+    and make the execution of certain functions privileged
+  */
+}
+
+```
+```javascript
+contract Bank {
+  /*
+    This will function much the same as the Owned contract, but can have a different
+    controlling address assigned to it. It will also have a 'bank balance' 
+  */
+}
+
+```
+```javascript
+contract MonopolyGame {
+  /*
+    This a contract that creates contracts. When ever someone other than the contract 
+    owner wants to play monopoly, they can run this contract and they will get their own "instance"
+    of monopoly. This can be compared to buying a copy of a game.
+  */
+}
+```
+```javascript
+contract MonopolyBank is Owned, Bank {
+  /*
+    The actual monopoly game bank.
+    MonopolyBank will be derived from Bank and Owned and will have access to their funtions
+  */
+}
+```
+### Modifiers ###
+A modifier are a special type of function that can be called before the function is executed and modify the behaviour of the function, we will build 3 modifiers:
+* onlyOwner
+* onlyBankManager
+* onlyPlayers
+
+### Modifiers ###
 Game owner functions
 * NewGame()
 * SetPlayer(string, address)
 * BankPayPlayer(string, int)
 * RefundBank()
 
-**Fines Pool** functions
-* PayFine(int)
-* ClaimFine()  using mulitsig / voting mechanism
-* GetFineBalance()
+### Deploying the contracts ###
+We will be deploying via mist, although this can be done using truffle.js which is a MUCH better way to do it.
 
-General / open functions
-* PayBank(string, int)
-* GetPlayerList()
-* PayPlayer(string, int)
-* GetMyBalance()
-* GetBankBalance()
+1. Ensure your node, miner (not required when cnnected to a network) and mist is running
+2. Make sure mist is running a private-net, otherwise the main Ethereum blockchain will start to sync to your PC 
+
+![private_net](img/mist_private.png)
+
+3. Open mist and go to the contracts section and click on **DEPLOY NEW CONTRACT** button 
+
+![deploy_new_contract](img/deploy_new_contract.png)
+
+4. To deploy, copy the code in the `monopoly_dao.sol` file (in the contracts folder) into the code editing area and select to deploy the **Monopoly Game** contract
+
+![deploy_monopoly_game](img/deploy_monopoly_game.png)
+
+5. The contract will take a while to deploy, but once deploy it should sit under your list of contracts.
+
+**To start a monopoly bank**
+ 
+ 1. Run the monopoly game contract (give it a name and currency symbol)
+
+![new_monopoly_bank.png](img/new_monopoly_bank.png)
+
+ 2. After the contract has executed, there should be an entry in the list of created games for your account's address
+ 3. Memorize or copy this entry (also an address)
+ 4. Go to the contracts page and **WATCH a CONTRACT**
+
+![watch_contract.png](img/watch_contract.png)
+
+ 5. Enter the entry you cpoied into the address field and give it a name
+ 6. Copy the content from the `MonopolyBank.json` file into the interface section and click OK
+ 7. Start playing monopoly 
+
+### Other Stuff ###
+* `mapping` types are declared as `mapping(_KeyType => _ValueType)`. Here `_KeyType` can be almost any type except for a mapping, a dynamically sized array, a contract, an enum and a struct. `_ValueType` can actually be any type, including mappings.
+* mappings with a _KeyType `string` cannot be made public, since there is no accesor for it. You probably could write one yourself. I did not.
+* Writing to storage is an expensive exercise
+
 
