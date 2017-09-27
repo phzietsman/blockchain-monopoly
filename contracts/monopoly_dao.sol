@@ -110,7 +110,7 @@ contract MonopolyBank is Owned, Bank {
         // since this contract gets executed from the MonopolyGame address, the sender is 
         // MonopolyGame.
 				transferOwnership(ownerNew);
-
+        newBankManager(ownerNew);
 
 				// This looks stupid, but it is way cheaper than 
 				// doing this every time you need to check a charm name
@@ -151,6 +151,7 @@ contract MonopolyBank is Owned, Bank {
         isValid = _charms[charmName];
 				return isValid;
     }
+    
 
 		/* Internal transfer, only can be called by this contract */
     function _transfer(address _from, string _fromCharm, address _to, string _toCharm, uint _value) internal {

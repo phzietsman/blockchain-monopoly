@@ -12,7 +12,7 @@ Nice to haves:
 * VSCode + Solidity plugin
 
 Tools
-* Contract interface generator [Link](http://chriseth.github.io/browser-solidity/#version=soljson-latest.js)
+* Contract interface generator [Link 1](http://chriseth.github.io/browser-solidity/#version=soljson-latest.js) [Link 2](https://ethereum.github.io/browser-solidity/#version=soljson-v0.4.17+commit.bdeb9e52.js)
 
 -----
 ## Starting a development Ethereum blockchain ##
@@ -338,5 +338,9 @@ We will be deploying via mist, although this can be done using truffle.js which 
 * `mapping` types are declared as `mapping(_KeyType => _ValueType)`. Here `_KeyType` can be almost any type except for a mapping, a dynamically sized array, a contract, an enum and a struct. `_ValueType` can actually be any type, including mappings.
 * mappings with a _KeyType `string` cannot be made public, since there is no accesor for it. You probably could write one yourself. I did not.
 * Writing to storage is an expensive exercise
-
+* Deleting contracts from your wallet
+```
+> CustomContracts.find().fetch()
+> CustomContracts.remove("S4nttHyBq6wuY3sHN")
+```
 
