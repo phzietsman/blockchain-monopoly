@@ -9,31 +9,23 @@ web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'));
 // the contract using the web3 library.
 // abi = Application Binary Interface
 const monopolyAbi = require('../contracts/MonopolyBank.json');
-// const MonopolyContract = new web3.eth.Contract(monopolyAbi);
+const MonopolyContract = web3.eth.contract(monopolyAbi);
 
 
 // // module.exports = LoginContract;
 
-const contractAddress = "0xbA1106AE4574647f5b4e75D041D6CeA29A2E88dC";
-// const monopolyContract = MonopolyContract.at(contractAddress);
+const contractAddress = "0x04B1efA3E9d84B353aDC84338C0EaD736323325E";
+const monopolyContract = MonopolyContract.at(contractAddress);
 
-// // // Get handle on Paid event
-// const paidEvent = monopolyContract.Paid();
+// // Get handle on Paid event
+const paidEvent = monopolyContract.Paid();
 
-// paidEvent.watch((error, event) => {
-//     if(error) {
-//         console.log(error);
-//         return;
-//     }
+paidEvent.watch((error, event) => {
+    if(error) {
+        console.log(error);
+        return;
+    }
 
-//     console.log(event);
+    console.log(event);
 
-// });
-
-        contract = web3.eth.contract(monopolyAbi).at(contractAddress);
-        var myEvent = contract.Evt({},{fromBlock: 0, toBlock: 'latest'});
-        myEvent.watch(function(error, result){
-            console.log("on watch");
-            console.log(result);
-            console.log(result.args);
-        });
+});

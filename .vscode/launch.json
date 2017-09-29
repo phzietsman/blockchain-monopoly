@@ -7,7 +7,7 @@
 		{
 			"type": "node",
 			"request": "launch",
-			"name": "Launch Program",
+			"name": "Web3 Debug",
 			"program": "${workspaceRoot}/web3/monopoly.js"
 		}
 	]

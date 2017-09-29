@@ -15,6 +15,19 @@ Tools
 * Contract interface generator [Link 1](http://chriseth.github.io/browser-solidity/#version=soljson-latest.js) [Link 2](https://ethereum.github.io/browser-solidity/#version=soljson-v0.4.17+commit.bdeb9e52.js)
 
 -----
+## Crip Notes ##
+
+* Start bootnode: `./bootnode --nodekey=boot.key`
+* Start geth: `./geth --datadir blockchaindata --networkid 123 --rpc --bootnodes enode_url`
+* Windows IPC: `\\.\pipe\geth.ipc`
+* Linux IPC: `blochaindata/geth.ipc`
+* Javascript console: `./geth attach ipc:blockchaindata/geth.ipc`
+* Attach mist: `./wallet --rpc blockchaindata/geth.ipc`
+* Set etherbase: `> miner.setEtherbase(personal.listAccounts[0])`
+* Start miner: `> miner.start(1)` 
+
+
+-----
 ## Starting a development Ethereum blockchain ##
 
 This is a handy way to start an Ethereum sandbox you can test and play in. The `--dev` flags does a bit of setup in the background to create a temporary private Ethereum blockchain 'instance'.
@@ -107,7 +120,7 @@ Future runs of geth on this data directory will use the genesis block you have d
 >**Note** the networkid matches the chainId in the genesis block. The main ethereum network uses chainId=1. The --identity flag simply gives your node a friendly name, this is not required.
 
 ```sh
-$ ./geth --datadir blockchaindata --identity "MyNodeName" --networkid 123
+$ ./geth --datadir blockchaindata --identity "MyNodeName" --networkid 123 --rpc
 ```
 
 ### Network Connectivity ###
@@ -121,7 +134,7 @@ $ bootnode --nodekey=boot.key
 Connecting your peer nodes to the network:
 
 ```sh
-$ ./geth --datadir blockchaindata --networkid 123 --bootnodes bootnode_enode_url_from_above
+$ ./geth --datadir blockchaindata --networkid 123 --rpc --bootnodes bootnode_enode_url_from_above
 ```
 
 Notice when you start up a node the console will print out your node's own enode url, this can be used by other nodes to connect to the network.  To add a static node to your config, you can add in one of two ways.  Adding it to `blockchaindata/static-nodes.json` (this should be the same folder that your chaindata and keystore folders are in):
@@ -159,6 +172,10 @@ $ ./wallet --rpc your_ipc_endpoint
 ```
 
 In the JavaScript console, start your miner.
+
+```sh
+$ ./geth attach blockchaindata/geth.ipc
+```
 
 ```sh
 > miner.setEtherbase(your_address_from_mist) 
@@ -338,9 +355,22 @@ We will be deploying via mist, although this can be done using truffle.js which 
 * `mapping` types are declared as `mapping(_KeyType => _ValueType)`. Here `_KeyType` can be almost any type except for a mapping, a dynamically sized array, a contract, an enum and a struct. `_ValueType` can actually be any type, including mappings.
 * mappings with a _KeyType `string` cannot be made public, since there is no accesor for it. You probably could write one yourself. I did not.
 * Writing to storage is an expensive exercise
-* Deleting contracts from your wallet
+* Deleting contracts from your wallet, open the developer console and do this:
 ```
 > CustomContracts.find().fetch()
 > CustomContracts.remove("S4nttHyBq6wuY3sHN")
 ```
 
+## BONUS ##
+### web3js ###
+Simple demo of how to interact with your local node. To run it:
+* npm install
+* change the `contractAddress` to the correct address
+* ensure the `--rpc` flag is set for your node
+* run the `node monopoly.js`
+The app will console log everytime the Paid event gets fired.
+
+## TODO ##
+* trufflejs
+* inteface with contacts using only web3
+* bring in more game logic
