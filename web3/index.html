@@ -1,0 +1,60 @@
+<html>
+
+<head>
+
+</head>
+
+<body>
+
+
+	<script src="monopoly.js"></script>
+
+	<script>
+		window.addEventListener('load', function () {
+
+			// Check if Web3 has been injected by the browser:
+			if (typeof web3 !== 'undefined') {
+				// You have a web3 browser! Continue below!
+				// startApp(web3);
+
+				console.log("WEB3!!!");
+
+				var account = web3.eth.accounts[0];
+				console.log("Account:", account);
+
+				var accountInterval = setInterval(function () {
+					if (web3.eth.accounts[0] !== account) {
+						account = web3.eth.accounts[0];
+						console.log("Account Change:", account);
+					}
+				}, 100);
+
+				web3.version.getNetwork((err, netId) => {
+					switch (netId) {
+						case "1":
+							console.log('This is mainnet')
+							break
+						case "2":
+							console.log('This is the deprecated Morden test network.')
+							break
+						case "3":
+							console.log('This is the ropsten test network.')
+							break
+						default:
+							console.log('This is an unknown network.')
+					}
+				});
+
+			} else {
+				// Warn the user that they need to get a web3 browser
+				// Or install MetaMask, maybe with a nice graphic.
+				console.log("!!!WEB3");
+
+			}
+
+		})
+	</script>
+
+</body>
+
+</html>
