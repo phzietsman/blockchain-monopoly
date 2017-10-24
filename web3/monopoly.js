@@ -15,13 +15,6 @@ const MonopolyContract = web3.eth.contract(monopolyAbi);
 const contractAddress = "0x253bb63b3233f42688425Ba3d8320E69c1C67b83";
 const monopolyContract = MonopolyContract.at(contractAddress);
 
-monopolyContract.bankBalance( (err,data) => console.log("bankBalance",data.toNumber()));
-monopolyContract.totalSupply( (err,data) => console.log("totalSupply",data.toNumber()));
-monopolyContract.balanceOf(0, (err,data) => console.log("balanceOf",data.toNumber()));
-monopolyContract.finesBalance( (err,data) => console.log("finesBalance",data.toNumber()));
-
-monopolyContract.charms(0, (err,data) => console.log("charms",data));
-
 function convertActiveFineClaim(data) {
     return {
         to: data[0],
@@ -30,9 +23,37 @@ function convertActiveFineClaim(data) {
     };
 }
 
+// uint vars
+monopolyContract.bankBalance( (err,data) => console.log("bankBalance",data.toNumber()));
+monopolyContract.totalSupply( (err,data) => console.log("totalSupply",data.toNumber()));
+monopolyContract.balanceOf(0, (err,data) => console.log("balanceOf",data.toNumber()));
+monopolyContract.finesBalance( (err,data) => console.log("finesBalance",data.toNumber()));
+
+// address
+monopolyContract.owner( (err,data) => console.log("owner",data));
+monopolyContract.bankManager( (err,data) => console.log("bankManager",data));
+
+
+// uint => string
+monopolyContract.charms(0, (err,data) => console.log("charms",data));
+
+// structs
 monopolyContract.activeFineClaim( (err,data) => console.log("activeFineClaim",convertActiveFineClaim(data)));
 
+// setTimeout(setBankManager, 1000);
 
+function setBankManager() {
+    monopolyContract.newBankManager("0xba55f0f6f20b9df12acd52aedf94b78476ba9197", (err,data) => {
+        
+        if(err){
+            console.log("err@newBankManager",err);
+            return;
+        }
+        
+        console.log("newBankManager",data);
+
+    });
+}
 
 
 // // Get handle on Paid event
